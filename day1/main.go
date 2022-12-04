@@ -9,31 +9,21 @@ import (
 )
 
 func main() {
-	// open file
 	f, err := os.Open("input")
 	if err != nil {
 		log.Fatal(err)
 	}
-	// remember to close the file at the end of the program
 	defer f.Close()
 
-	// read the file line by line using scanner
 	scanner := bufio.NewScanner(f)
 
-	var current, most, calories int
-
+	var currentCal, mostCal, calLine int
 	for scanner.Scan() {
-		// do something with a line
-		line := scanner.Text()
-		calories, _ = strconv.Atoi(line)
-		most, current = process(most, current, calories)
+		calLine, _ = strconv.Atoi(scanner.Text())
+		mostCal, currentCal = process(mostCal, currentCal, calLine)
 	}
 
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("most caloreis: ", most)
+	fmt.Println("most calories", mostCal)
 }
 
 func process(most, current, calories int) (int, int) {
@@ -41,9 +31,7 @@ func process(most, current, calories int) (int, int) {
 		return most, 0
 	}
 
-	current += calories
-
-	if current > most {
+	if current += calories; current > most {
 		most = current
 	}
 
