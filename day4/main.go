@@ -21,7 +21,7 @@ func main() {
 	overlapSum := 0
 
 	for scanner.Scan() {
-		if overlaps(scanner.Text()) {
+		if contains(scanner.Text()) {
 			overlapSum += 1
 		}
 	}
@@ -29,17 +29,18 @@ func main() {
 	fmt.Println("Overlap Sum: ", overlapSum)
 }
 
-func overlaps(s string) bool {
+func contains(s string) bool {
 	assignments := strings.Split(s, ",")
-	fLower, fHigher := readRange(strings.Split(assignments[0], "-"))
-	sLower, sHigher := readRange(strings.Split(assignments[1], "-"))
+	fSectionStart, fSectionEnd := sectionRange(strings.Split(assignments[0], "-"))
+	sSectionStart, sSectionEnd := sectionRange(strings.Split(assignments[1], "-"))
 
-	return (fLower <= sLower && fHigher >= sHigher) || (sLower <= fLower && sHigher >= fHigher)
+	return (fSectionStart <= sSectionStart && fSectionEnd >= sSectionEnd) ||
+		(sSectionStart <= fSectionStart && sSectionEnd >= fSectionEnd)
 }
 
-func readRange(sections []string) (int, int) {
-	lower, _ := strconv.Atoi(sections[0])
-	higher, _ := strconv.Atoi(sections[1])
+func sectionRange(sections []string) (int, int) {
+	sectionStart, _ := strconv.Atoi(sections[0])
+	sectionEnd, _ := strconv.Atoi(sections[1])
 
-	return lower, higher
+	return sectionStart, sectionEnd
 }
