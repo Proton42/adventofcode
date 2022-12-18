@@ -29,6 +29,19 @@ func ToMove(s string) (Move, error) {
 	}
 }
 
+func ToResult(s string) (Result, error) {
+	switch {
+	case s == "X":
+		return Loss, nil
+	case s == "Y":
+		return Draw, nil
+	case s == "Z":
+		return Win, nil
+	default:
+		return 0, errors.New("Oh no!")
+	}
+}
+
 type Result int
 
 const (
@@ -65,7 +78,32 @@ func GetResult(theirs, yours Move) Result {
 	return Loss // We have paper
 }
 
-func CalcPoints(theirs, yours Move) int {
+func yourMove(theirs Move, outcome Result) Move {
+	if outcome == Draw {
+		return theirs
+	}
+
+	if outcome == Win {
+		if theirs == Paper {
+			return Scissor
+		}
+		if theirs == Rock {
+			return Paper
+		}
+		return Rock
+	}
+
+	if theirs == Paper {
+		return Rock
+	}
+	if theirs == Rock {
+		return Scissor
+	}
+	return Paper
+}
+
+func CalcPoints(theirs Move, outcome Result) int {
+	yours := yourMove(theirs, outcome)
 	res := int(GetResult(theirs, yours))
 
 	result := res + int(yours)
@@ -89,7 +127,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		yours, err := ToMove(string(scanner.Text()[2]))
+		yours, err := ToResult(string(scanner.Text()[2]))
 		if err != nil {
 			log.Fatal(err)
 		}
