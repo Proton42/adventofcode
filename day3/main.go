@@ -24,12 +24,14 @@ func exists(item rune, compartment string) bool {
 	return false
 }
 
-func SharedItems(comp1, comp2 string) []rune {
+func SharedItems(comp1, comp2, comp3 string) []rune {
 	itemMap := map[rune]bool{}
 
 	for _, s := range comp1 {
 		if exists(s, comp2) {
-			itemMap[s] = true
+			if exists(s, comp3) {
+				itemMap[s] = true
+			}
 		}
 	}
 
@@ -52,11 +54,13 @@ func main() {
 
 	prioritySum := 0
 	for scanner.Scan() {
-		rucksack := scanner.Text()
-		compartment1 := rucksack[:len(rucksack)/2]
-		compartment2 := rucksack[len(rucksack)/2:]
+		rucksack1 := scanner.Text()
+		scanner.Scan()
+		rucksack2 := scanner.Text()
+		scanner.Scan()
+		rucksack3 := scanner.Text()
 
-		sharedItems := SharedItems(compartment1, compartment2)
+		sharedItems := SharedItems(rucksack1, rucksack2, rucksack3)
 
 		for _, item := range sharedItems {
 			prioritySum += Priority(int(item))
